@@ -36,11 +36,19 @@ public class TestIndexManage {
         for (Sku sku : skuList) {
             Document doc =new Document();
             // 向文档对象 中加入域对象， 参数：（域名，域值， 是否存储）， 是否索引等
+            /**
+             *              ID           name  price           image  category
+             * 是否分词：    否（无意义）    是     是（底层算法需要） 否     否
+             * 是否索引     是             是     是               否     是
+             * 是否存储     是             是     是               是     是
+             * 对应类型   StringField
+             */
+
             // id
             doc.add(new StringField("id", sku.getId(), Field.Store.YES));
             // 名称
             doc.add(new TextField("name", sku.getName(), Field.Store.YES));
-            //  价格
+            //  价格， 在lucene中如果需要根据价格范围查询，就必须要分词
             doc.add(new IntPoint("price", sku.getPrice()));
             doc.add(new StoredField("price", sku.getPrice()));
             // 商品图片
